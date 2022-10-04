@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
+const authenticated = require('./middleware/authentication');
 
 const pathTalkers = path.resolve(__dirname, '..', 'src', 'talker.json');
 
@@ -32,9 +33,10 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(talkerArray[index]);
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', authenticated, (req, res) => {
   function generateToken() {
     return crypto.randomBytes(8.5).toString('hex');
+    // return crypto.randomBytes(16).toString('utf8')
   }
 
   const generatedToken = generateToken();
