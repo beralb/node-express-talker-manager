@@ -19,7 +19,7 @@ services:
     working_dir: /app
     # Lista de volumes (diretórios) mapeados de fora para dentro do container
     volumes:
-      # Monta o diretório atual, com todos os dados do projeto, 
+      # Monta o diretório atual, com todos os dados do projeto,
       # dentro do diretório /app
       - ./:/app
     # Lista de portas mapeadas de dentro para fora do container
