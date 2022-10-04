@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const path = require('path');
+const crypto = require('crypto');
 
 const pathTalkers = path.resolve(__dirname, '..', 'src', 'talker.json');
 
@@ -31,9 +32,15 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(talkerArray[index]);
 });
 
-/* app.post('/login', (req, res) => {
+app.post('/login', (req, res) => {
+  function generateToken() {
+    return crypto.randomBytes(8.5).toString('hex');
+  }
 
-}); */
+  const generatedToken = generateToken();
+
+  res.status(200).json({ token: generatedToken });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
