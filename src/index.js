@@ -27,6 +27,18 @@ app.get('/talker', async (req, res) => {
   res.status(200).json(talkerArray);
 });
 
+app.get('/talker/search', talkerTokenAuth, async (req, res) => {
+  const talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf8'));
+  console.log(talkersArray);
+  const { q } = req.query;
+  console.log('estou na linha 120', q);
+  if (!q || q === '') {
+    return res.status(200).json(talkersArray);
+  }
+  const searchResponse = talkersArray.filter((speaker) => speaker.name.includes(q));
+  res.status(200).json(searchResponse);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const talkerArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
   const { id } = req.params;
