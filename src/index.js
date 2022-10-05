@@ -44,7 +44,7 @@ app.post('/login', authenticated, (req, res) => {
 
   const generatedToken = generateToken();
   process.env.GLOBAL_TOKEN = generatedToken;
-  console.log(`global token index: ${process.env.GLOBAL_TOKEN}`);
+  // console.log(`global token index: ${process.env.GLOBAL_TOKEN}`);
   res.status(200).json({ token: generatedToken });
 });
 
@@ -55,19 +55,42 @@ app.post(
   talkerData02Validation,
   talkerData03Validation,
   async (req, res) => {
-let talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
-const id = talkersArray.length + 1;
-const { name, age, talk } = req.body;
-const newTalker = { name, age, id, talk };
-console.log(`O newtalker object é ${newTalker}`);
-talkersArray = [...talkersArray, newTalker];
+    let talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
+    const id = talkersArray.length + 1;
+    const { name, age, talk } = req.body;
+    const newTalker = { name, age, id, talk };
+    talkersArray = [...talkersArray, newTalker];
 
-await fs.writeFile(pathTalkers, JSON.stringify(talkersArray), 'utf8');
+    await fs.writeFile(pathTalkers, JSON.stringify(talkersArray), 'utf8');
 
-res.status(201).json(newTalker);
-},
+    res.status(201).json(newTalker);
+  },
 );
+
+app.put('/talker/:id',
+  talkerTokenAuth,
+  talkerData01Validation,
+  talkerData02Validation,
+  talkerData03Validation,
+  async (req, res) => {
+    const talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
+    const { id } = req.params;
+    const index = talkersArray.findIndex((talker) => talker.id === Number(id));
+    const { name, age, talk } = req.body;
+
+    talkersArray[index].name = name;
+    talkersArray[index].age = age;
+    talkersArray[index].talk = talk;
+
+    await fs.writeFile(pathTalkers, JSON.stringify(talkersArray), 'utf8');
+    res.status(200).json(talkersArray[index]);
+    // res.status(200).json(newTalker);
+  });
 
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+    /* const newTalker = req.body;
+    newTalker.id = talkersArray[index].id;
+    talkersArray.splice(index, 1, newTalker); */

@@ -1,6 +1,5 @@
 module.exports = function talkerData01Validation(req, res, next) {
   const { name, age } = req.body;
-  console.log(name);
 
   if (!name) {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
