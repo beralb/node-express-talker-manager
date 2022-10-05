@@ -4,6 +4,10 @@ const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
 const authenticated = require('./middleware/authentication');
+const talkerTokenAuth = require('./middleware/talkerTokenValidation');
+const talkerData01Validation = require('./middleware/talkerData01Validation');
+const talkerData02Validation = require('./middleware/talkerData02Validation');
+const talkerData03Validation = require('./middleware/talkerData03Validation');
 
 const pathTalkers = path.resolve(__dirname, '..', 'src', 'talker.json');
 
@@ -36,16 +40,34 @@ app.get('/talker/:id', async (req, res) => {
 app.post('/login', authenticated, (req, res) => {
   function generateToken() {
     return crypto.randomBytes(8.5).toString('hex');
-    // return crypto.randomBytes(16).toString('utf8')
   }
 
   const generatedToken = generateToken();
-
+  process.env.GLOBAL_TOKEN = generatedToken;
+  console.log(`global token index: ${process.env.GLOBAL_TOKEN}`);
   res.status(200).json({ token: generatedToken });
 });
+
+app.post(
+  '/talker',
+  talkerTokenAuth,
+  talkerData01Validation,
+  talkerData02Validation,
+  talkerData03Validation,
+  async (req, res) => {
+let talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
+const id = talkersArray.length + 1;
+const { name, age, talk } = req.body;
+const newTalker = { name, age, id, talk };
+console.log(`O newtalker object é ${newTalker}`);
+talkersArray = [...talkersArray, newTalker];
+
+await fs.writeFile(pathTalkers, JSON.stringify(talkersArray), 'utf8');
+
+res.status(201).json(newTalker);
+},
+);
 
 app.listen(PORT, () => {
   console.log('Online');
 });
-
- // const id = req.params.id;
