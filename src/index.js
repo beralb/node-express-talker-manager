@@ -90,17 +90,17 @@ app.put('/talker/:id',
   app.put('/talker/:id',
   talkerTokenAuth,
   async (req, res) => {
-    const talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
+    const talkersList = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
     const { id } = req.params;
-    const index = talkersArray.findIndex((talker) => talker.id === Number(id));
+    const index = talkersList.findIndex((talker) => talker.id === Number(id));
     const { name, age, talk } = req.body;
 
-    talkersArray[index].name = name;
-    talkersArray[index].age = age;
-    talkersArray[index].talk = talk;
+    talkersList[index].name = name;
+    talkersList[index].age = age;
+    talkersList[index].talk = talk;
 
-    await fs.writeFile(pathTalkers, JSON.stringify(talkersArray), 'utf8');
-    res.status(200).json(talkersArray[index]);
+    await fs.writeFile(pathTalkers, JSON.stringify(talkersList), 'utf8');
+    res.status(200).json(talkersList[index]);
     // res.status(200).json(newTalker);
   });
 
