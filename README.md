@@ -1,4 +1,4 @@
-<h1 align="center">Nodejs-Express / Talker-Manager</h1>
+<h1 align="center">Nodejs-Express / Project Talker-Manager</h1>
 <h3 align="center">This was a project developed in the back-end module of web development of Trybe, using technologies such Nodejs, Express and Docker. This project has the purpose of elaborate a back-end application which has the declaration of routes, requests and responses</h3>
 
 
