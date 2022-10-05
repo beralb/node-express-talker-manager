@@ -117,7 +117,3 @@ app.put('/talker/:id',
 app.listen(PORT, () => {
   console.log('Online');
 });
-
-    /* const newTalker = req.body;
-    newTalker.id = talkersArray[index].id;
-    talkersArray.splice(index, 1, newTalker); */
