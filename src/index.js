@@ -87,6 +87,33 @@ app.put('/talker/:id',
     // res.status(200).json(newTalker);
   });
 
+  app.put('/talker/:id',
+  talkerTokenAuth,
+  async (req, res) => {
+    const talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
+    const { id } = req.params;
+    const index = talkersArray.findIndex((talker) => talker.id === Number(id));
+    const { name, age, talk } = req.body;
+
+    talkersArray[index].name = name;
+    talkersArray[index].age = age;
+    talkersArray[index].talk = talk;
+
+    await fs.writeFile(pathTalkers, JSON.stringify(talkersArray), 'utf8');
+    res.status(200).json(talkersArray[index]);
+    // res.status(200).json(newTalker);
+  });
+
+  app.delete('/talker/:id', talkerTokenAuth, async (req, res) => {
+    const talkersArray = JSON.parse(await fs.readFile(pathTalkers, 'utf-8'));
+    const { id } = req.params;
+    const index = talkersArray.findIndex((talker) => talker.id === Number(id));
+    talkersArray.splice(index, 1);
+    console.log(talkersArray);
+    await fs.writeFile(pathTalkers, JSON.stringify(talkersArray), 'utf8');
+    res.status(204).json('');
+  });
+
 app.listen(PORT, () => {
   console.log('Online');
 });
